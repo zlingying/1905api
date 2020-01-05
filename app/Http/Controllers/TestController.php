@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redis;
 
 class TestController extends Controller
 {
@@ -26,7 +27,7 @@ class TestController extends Controller
     	//请求参数
     	$out_trade_no = time() . rand(1111,9999);	//商户订单号
     	$product_code = 'FAST_INSTANT_TRADE_PAY';
-    	$total_amount = 0.01;
+    	$total_amount = 1;
     	$subject = '测试订单' . $out_trade_no;
 
     	$request_param = [
@@ -71,7 +72,7 @@ class TestController extends Controller
         $priKey = file_get_contents($key);
         $res = openssl_get_privatekey($priKey);
         //var_dump($res);echo '</br>';
-        openssl_sign($str, $sign, $res, OPENSSL_ALGO_SHA256);
+        openssl_sign($str, $sign, $res, OPENSSL_ALGO_SHA256);   //计算签名
         $sign = base64_encode($sign);
         $param['sign'] = $sign;
 
@@ -88,6 +89,111 @@ class TestController extends Controller
         //echo $url;die;
         header("Location:".$url);
     	
+    }
+
+    public function goods(Request $request)
+    {
+        $goods_id = $request->input('id');      //商品ID
+        echo 'goods_id: '.$goods_id;
+        $key = 'ss:goods_click';            // 商品点击排名 有序集合
+        //Redis::Zadd($key,$score,$goods_id);
+        // 当用户访问商品页面 ，点击数 +1
+        Redis::zIncrBy($key,1,$goods_id);
+        echo "OK";
+    }
+
+    /**
+     * 商品点击排名
+     */
+    public function goods2()
+    {
+        $key = 'ss:goods_click';
+        $list = Redis::zRevRange($key,0,-1,true);
+        echo '<pre>';print_r($list);echo '</pre>';
+    }
+
+    public function grab()
+    {
+        $redis_key = 'l:mobile:1234';   // 记录顺序
+        $redis_s_key = 's:mobile:1234'; // 记录人数
+        $uid = $_GET['uid'];
+        $total = Redis::lLen($redis_key);
+        echo '列表长度：'. $total;echo '</br>';
+        $list = Redis::lRange($redis_key,0,-1);
+        echo '<pre>';print_r($list);echo '</pre>';echo '<hr>';
+        if($total >=5 ){
+            echo "活动结束了";die;
+        }
+
+        //判断 元素是否在集合中
+        $status = Redis::sIsMember($redis_s_key,$uid);
+        var_dump($status);
+        if($status){
+            // 用户不能参加抢购
+            echo "不要重复参加";
+        }else{
+            //可以参加抢购
+            Redis::rPush($redis_key,$uid);      // 记录顺序
+            Redis::sAdd($redis_s_key,$uid);
+        }
+        
+        $list = Redis::lRange($redis_key,0,-1);
+        echo '<pre>';print_r($list);echo '</pre>';
+    }
+
+    //加密
+    public function ascii()
+    {
+        $char = "hello zly";
+        $length = strlen($char);
+        echo $length;echo '</br>';
+
+        $pass = "";
+        for($i=0;$i<$length;$i++)
+        { 
+            echo $char[$i] . '>>>' . ord($char[$i]);echo '</br>';
+            $ord = ord($char[$i]) + 3;
+            $chr = chr($ord);
+            echo $char[$i] . '>>>' . $ord . '>>>' . $chr;echo '<hr>';
+            $pass .=$chr;
+        }
+        echo '<hr>';
+        echo $pass;
+
+    }
+
+    //解密
+    public function dec()
+    {
+        $enc = 'khoor#}o|';
+        echo "密文: ".$enc;echo '<hr>';
+        $length = strlen($enc);
+
+        $str = "";
+        for ($i=0; $i<$length; $i++)
+        { 
+            $ord = ord($enc[$i]) - 3;
+            $chr = chr($ord); 
+            echo $ord . '>>>' . $chr ;echo '</br>';
+            $str .=$chr;
+        }
+
+        echo "解密: ".$str;
+    }
+
+    public function md1()
+    {
+        echo base64_decode("VGhpcyBpcyBhbiBlbmNvZGVkIHN0cmluZw==");die;
+        echo md5($_GET['p']);die;
+        echo md5('123');die;
+        $str1 = "hello zly";
+        echo $str1;echo "</br>";
+        echo md5($str1);
+        echo "<hr>";
+
+        $str2 = "hello zly hello zly hello zly asdfghjkl";
+        echo $str2;echo "</br>";
+        echo md5($str2);
     }
 
 }

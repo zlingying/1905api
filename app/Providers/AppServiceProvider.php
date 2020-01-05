@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Providers;
+
 use Illuminate\Support\Facades\Schema; //add fixed sql
 
 use Illuminate\Support\ServiceProvider;
