@@ -15,6 +15,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Auth::routes();
+
+Route::get('/home','HomeController@index')->name('home');
 
 Route::get('/test/pay','TestController@alipay');	//去支付
 Route::get('/goods','TestController@goods');
@@ -33,3 +36,12 @@ Route::get('/api/test','Api\TestController@test');
 Route::post('/api/user/reg','Api\TestController@reg');          //用户注册
 Route::post('/api/user/login','Api\TestController@login');      //用户登录
 Route::get('/api/user/list','Api\TestController@userList')->middleware('filter');      //用户列表
+
+//测试
+Route::get('/test/curl1','Test\CurlController@curl1');
+Route::post('/test/curl2','Test\CurlController@curl2');
+Route::post('/test/curl3','Test\CurlController@curl3');
+Route::post('/test/curl4','Test\CurlController@curl4');
+
+//用户管理
+Route::get('/user/addkey','User\IndexController@addSSHKey');
