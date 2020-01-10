@@ -28,6 +28,7 @@ class TestController extends Controller
         if($pass1 != $pass2){
             die("两次的密码不一致");
         }
+        
         $password = password_hash($pass1,PASSWORD_BCRYPT);
 
         $data = [

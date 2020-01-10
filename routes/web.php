@@ -43,5 +43,22 @@ Route::post('/test/curl2','Test\CurlController@curl2');
 Route::post('/test/curl3','Test\CurlController@curl3');
 Route::post('/test/curl4','Test\CurlController@curl4');
 
+//
+Route::get('/test/rsa1','TestController@rsa1');
+
 //用户管理
-Route::get('/user/addkey','User\IndexController@addSSHKey');
+Route::get('/user/addkey','User\IndexController@addSSHKey1');
+Route::post('/user/addkey','User\IndexController@addSSHKey2');
+
+//解密数据
+Route::get('/user/decrypt/data','User\IndexController@decrypt1');
+Route::post('/user/decrypt/data','User\IndexController@decrypt2');
+
+//签名测试
+Route::get('/sign1','TestController@sign1');
+Route::get('/test/get/signonlie','Sign\IndexController@signOnline');
+Route::post('/test/post/signonlie','Sign\IndexController@signOnline1');
+Route::get('/test/get/sign1','Sign\IndexController@sign1');
+Route::post('/test/post/sign2','Sign\IndexController@sign2');
+
+Route::get('/test/sign2','TestController@sign2');

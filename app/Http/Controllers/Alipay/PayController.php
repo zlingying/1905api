@@ -51,6 +51,7 @@ class PayController extends Controller
             $log = date('Y-m-d H:i:s') . ' >>> 验签失败 0' . "\n\n";
             file_put_contents("logs/alipay.log",$log,FILE_APPEND);
         }
+         echo 'success';
     }
 
     /**
@@ -73,6 +74,7 @@ class PayController extends Controller
         //释放资源
         openssl_free_key($res);
         var_dump($result);
+        
         return $result;
     }
 }
