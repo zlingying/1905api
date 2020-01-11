@@ -273,4 +273,11 @@ class TestController extends Controller
         }
     }
 
+    //自动上线
+    public function gitpull()
+    {
+        $cmd = 'cd /data/wwwroot/default/api && git pull';
+        shell_exec($cmd);
+    }
+
 }
