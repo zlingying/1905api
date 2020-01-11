@@ -278,7 +278,6 @@ class TestController extends Controller
     {
         $cmd = 'cd /data/wwwroot/default/api && git pull';
         shell_exec($cmd);
-        ////
     }
 
 }
