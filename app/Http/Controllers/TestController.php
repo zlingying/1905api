@@ -277,7 +277,7 @@ class TestController extends Controller
     public function gitpull()
     {
         $cmd = 'cd /data/wwwroot/default/api && git pull';
-        shell_exec($cmd);
+        shell_exec($cmd);//
     }
 
 }
