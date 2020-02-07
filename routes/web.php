@@ -15,6 +15,12 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+//////////////////////////  TEST  //////////////////////////////
+Route::get('/test/sign2','Api\TestController@sign2');
+
+//////////////////////////  TEST  //////////////////////////////
+
+
 Auth::routes();
 
 Route::get('/home','HomeController@index')->name('home');
@@ -26,6 +32,10 @@ Route::get('/test/grab','TestController@grab');
 Route::get('/test/ascii','TestController@ascii');	//加密
 Route::get('/test/dec','TestController@dec');	//解密
 Route::get('/test/md1','TestController@md1');	//
+
+Route::get('/test/postman','Api\TestController@postman');
+Route::get('/test/postman1','Api\TestController@postman1')->middleware('filter','check.token');
+
 
 Route::get('/test/alipay/return','Alipay\PayController@aliReturn');
 Route::post('/test/alipay/notify','Alipay\PayController@notify');
